@@ -1,0 +1,422 @@
+2025-05-26 16:34:21,859 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 16:34:21,860 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 16:34:21,862 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 16:34:21,863 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 16:34:21,864 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 16:34:21,865 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 16:34:21,866 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:34:21,870 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 16:34:21,871 - sqlalchemy.engine.Engine - INFO - [generated in 0.00112s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 16:34:21,876 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 16:34:21,877 - sqlalchemy.engine.Engine - INFO - [no key 0.00065s] ()
+2025-05-26 16:34:21,882 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 16:34:21,883 - sqlalchemy.engine.Engine - INFO - [cached since 0.01243s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 16:34:21,885 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 16:34:21,886 - sqlalchemy.engine.Engine - INFO - [no key 0.00165s] ()
+2025-05-26 16:34:21,898 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 16:34:21,898 - sqlalchemy.engine.Engine - INFO - [no key 0.00080s] ()
+2025-05-26 16:34:21,903 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 16:35:21,501 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:35:21,516 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 16:35:22,659 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 16:35:23,726 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 16:35:23,751 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:35:23,757 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR) RETURNING books.id
+2025-05-26 16:35:23,760 - sqlalchemy.engine.Engine - INFO - [generated in 0.00257s] ('harry potter', 'J.K', 1997, 'ph', 0, 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wiza ... (255 characters truncated) ... st of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/')
+2025-05-26 16:35:23,769 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 16:35:23,773 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:35:23,778 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-26 16:35:23,781 - sqlalchemy.engine.Engine - INFO - [generated in 0.00270s] (1,)
+2025-05-26 16:35:23,785 - book_catalog - INFO - Книга создана: <models.books.BookRepository object at 0x00000217215F73B0>
+2025-05-26 16:35:23,786 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-26 16:35:32,471 - book_catalog - INFO - Фильтрация title=None author=None genre=None limit=10 offset=0
+2025-05-26 16:35:32,472 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:35:32,473 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+ LIMIT $1::INTEGER
+2025-05-26 16:35:32,474 - sqlalchemy.engine.Engine - INFO - [generated in 0.00086s] (10,)
+2025-05-26 16:35:32,476 - book_catalog - INFO - Получаем отфильтрованный список книг[<models.books.BookRepository object at 0x0000021721658DD0>]
+2025-05-26 16:35:32,477 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-26 16:35:38,873 - book_catalog - INFO - Поиск книги по ID: 1
+2025-05-26 16:35:38,875 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:35:38,877 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-26 16:35:38,880 - sqlalchemy.engine.Engine - INFO - [generated in 0.00316s] (1,)
+2025-05-26 16:35:38,882 - book_catalog - INFO - Получаем книгу по ID: <models.books.BookRepository object at 0x000002172166D370>
+2025-05-26 16:35:38,882 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-26 16:35:49,247 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 16:35:49,248 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-26 16:35:49,248 - sqlalchemy.engine.Engine - INFO - [cached since 10.37s ago] (1,)
+2025-05-26 16:35:49,253 - sqlalchemy.engine.Engine - INFO - DELETE FROM books WHERE books.id = $1::INTEGER
+2025-05-26 16:35:49,253 - sqlalchemy.engine.Engine - INFO - [generated in 0.00085s] (1,)
+2025-05-26 16:35:49,255 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 16:35:55,485 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:35:55,488 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: jsonbin
+2025-05-26 16:35:56,582 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:35:57,739 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 16:35:58,765 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 16:35:59,720 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:36:00,554 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:36:00,556 - book_catalog - INFO - Книга создана: {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'ph', 'pages': 0, 'availability': <AvailabilityStatus.AVAILABLE: 'available'>, 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-26 16:36:14,381 - book_catalog - INFO - Фильтрация title='harry potter' author=None genre=None limit=10 offset=0
+2025-05-26 16:36:15,352 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:36:15,354 - book_catalog - INFO - Получаем отфильтрованный список книг[{'id': 9, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 10, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Phentesy', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'ph', 'pages': 0, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}]
+2025-05-26 16:36:33,105 - book_catalog - INFO - Поиск книги по ID: 11
+2025-05-26 16:36:39,138 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:36:39,143 - book_catalog - INFO - Получаем книгу по ID: {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'ph', 'pages': 0, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-26 16:36:48,993 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 16:36:50,376 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:09:51,072 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:09:51,072 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:09:51,075 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:09:51,075 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:09:51,078 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:09:51,078 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:09:51,080 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:09:51,084 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:09:51,085 - sqlalchemy.engine.Engine - INFO - [generated in 0.00093s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:09:51,089 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:09:51,089 - sqlalchemy.engine.Engine - INFO - [no key 0.00056s] ()
+2025-05-26 17:09:51,095 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:09:51,096 - sqlalchemy.engine.Engine - INFO - [cached since 0.01153s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:09:51,098 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:09:51,099 - sqlalchemy.engine.Engine - INFO - [no key 0.00169s] ()
+2025-05-26 17:09:51,111 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:09:51,111 - sqlalchemy.engine.Engine - INFO - [no key 0.00065s] ()
+2025-05-26 17:09:51,116 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:15:11,713 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:15:11,714 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:15:11,716 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:15:11,717 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:15:11,718 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:15:11,718 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:15:11,720 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:15:11,724 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:15:11,725 - sqlalchemy.engine.Engine - INFO - [generated in 0.00105s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:15:11,729 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:15:11,730 - sqlalchemy.engine.Engine - INFO - [no key 0.00054s] ()
+2025-05-26 17:15:11,734 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:15:11,735 - sqlalchemy.engine.Engine - INFO - [cached since 0.01064s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:15:11,737 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:15:11,738 - sqlalchemy.engine.Engine - INFO - [no key 0.00157s] ()
+2025-05-26 17:15:11,752 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:15:11,753 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-05-26 17:15:11,757 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:18:29,224 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:18:29,225 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:18:29,227 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:18:29,227 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:18:29,229 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:18:29,229 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:18:29,230 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:18:29,234 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:18:29,235 - sqlalchemy.engine.Engine - INFO - [generated in 0.00107s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:18:29,239 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:18:29,240 - sqlalchemy.engine.Engine - INFO - [no key 0.00059s] ()
+2025-05-26 17:18:29,244 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:18:29,245 - sqlalchemy.engine.Engine - INFO - [cached since 0.01016s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:18:29,246 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:18:29,248 - sqlalchemy.engine.Engine - INFO - [no key 0.00161s] ()
+2025-05-26 17:18:29,259 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:18:29,259 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-05-26 17:18:29,263 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:18:56,908 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:18:56,917 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 17:18:58,074 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:18:59,100 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:18:59,105 - book_catalog - ERROR - Ошибка создания книги: models.books.BookRepository() got multiple values for keyword argument 'cover_url'
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2.0\main.py", line 74, in create_book
+    new_book = await adapter.create_book(book_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2.0\interfaces\books.py", line 68, in create_book
+    db_book = BookRepository(
+              ^^^^^^^^^^^^^^^
+TypeError: models.books.BookRepository() got multiple values for keyword argument 'cover_url'
+2025-05-26 17:20:17,024 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:20:17,026 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 17:20:25,017 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:20:32,872 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:20:32,874 - book_catalog - ERROR - Ошибка создания книги: models.books.BookRepository() got multiple values for keyword argument 'year'
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2.0\main.py", line 74, in create_book
+    new_book = await adapter.create_book(book_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2.0\interfaces\books.py", line 68, in create_book
+    db_book = BookRepository(
+              ^^^^^^^^^^^^^^^
+TypeError: models.books.BookRepository() got multiple values for keyword argument 'year'
+2025-05-26 17:21:10,311 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:21:10,316 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 17:21:17,612 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:21:23,512 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:21:23,513 - book_catalog - ERROR - Ошибка создания книги: models.books.BookRepository() got multiple values for keyword argument 'cover_url'
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2.0\main.py", line 74, in create_book
+    new_book = await adapter.create_book(book_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2.0\interfaces\books.py", line 68, in create_book
+    db_book = BookRepository(
+              ^^^^^^^^^^^^^^^
+TypeError: models.books.BookRepository() got multiple values for keyword argument 'cover_url'
+2025-05-26 17:21:41,967 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:21:41,970 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 17:21:43,060 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:21:44,156 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:21:44,162 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:21:44,167 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR) RETURNING books.id
+2025-05-26 17:21:44,169 - sqlalchemy.engine.Engine - INFO - [generated in 0.00167s] ('harry potter', 'J.K', 1997, 'ph', 100, 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wiza ... (255 characters truncated) ... st of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/')
+2025-05-26 17:21:44,178 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:21:44,189 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:21:44,195 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-26 17:21:44,196 - sqlalchemy.engine.Engine - INFO - [generated in 0.00123s] (1,)
+2025-05-26 17:21:44,198 - book_catalog - INFO - Книга создана: <models.books.BookRepository object at 0x00000285E8BA62A0>
+2025-05-26 17:21:44,199 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-26 17:21:58,466 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:22:15,457 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:32:42,099 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:32:42,101 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:42,103 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:32:42,104 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:42,105 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:32:42,106 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:42,107 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:32:42,111 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:32:42,112 - sqlalchemy.engine.Engine - INFO - [generated in 0.00124s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:32:42,116 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:32:42,117 - sqlalchemy.engine.Engine - INFO - [no key 0.00077s] ()
+2025-05-26 17:32:42,122 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:32:42,122 - sqlalchemy.engine.Engine - INFO - [cached since 0.01124s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:32:42,124 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:32:42,126 - sqlalchemy.engine.Engine - INFO - [no key 0.00156s] ()
+2025-05-26 17:32:42,137 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:32:42,138 - sqlalchemy.engine.Engine - INFO - [no key 0.00068s] ()
+2025-05-26 17:32:42,142 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:32:51,942 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:32:51,943 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:51,945 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:32:51,945 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:51,947 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:32:51,947 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:32:51,948 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:32:51,953 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:32:51,953 - sqlalchemy.engine.Engine - INFO - [generated in 0.00095s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:32:51,957 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:32:51,957 - sqlalchemy.engine.Engine - INFO - [no key 0.00056s] ()
+2025-05-26 17:32:51,962 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:32:51,962 - sqlalchemy.engine.Engine - INFO - [cached since 0.009907s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:32:51,964 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:32:51,966 - sqlalchemy.engine.Engine - INFO - [no key 0.00153s] ()
+2025-05-26 17:32:51,976 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:32:51,976 - sqlalchemy.engine.Engine - INFO - [no key 0.00048s] ()
+2025-05-26 17:32:51,980 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:33:39,104 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:33:39,114 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-26 17:33:40,216 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:33:41,274 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:33:41,298 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:33:41,306 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR) RETURNING books.id
+2025-05-26 17:33:41,309 - sqlalchemy.engine.Engine - INFO - [generated in 0.00460s] ('harry potter', 'jk', 1997, 'PH', 300, 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wiza ... (255 characters truncated) ... st of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/')
+2025-05-26 17:33:41,316 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:33:41,319 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:33:41,323 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-26 17:33:41,325 - sqlalchemy.engine.Engine - INFO - [generated in 0.00151s] (1,)
+2025-05-26 17:33:41,328 - book_catalog - INFO - Книга создана: <models.books.BookRepository object at 0x00000220090FEC60>
+2025-05-26 17:33:41,328 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-26 17:33:53,886 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:33:53,893 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: jsonbin
+2025-05-26 17:33:54,867 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:33:56,013 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-26 17:33:57,099 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-26 17:33:58,180 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:33:59,184 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-26 17:33:59,187 - book_catalog - INFO - Книга создана: {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'PH', 'pages': 300, 'availability': <AvailabilityStatus.AVAILABLE: 'available'>, 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-26 17:34:33,179 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:34:33,180 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:33,182 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:34:33,182 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:33,184 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:34:33,184 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:33,185 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:34:33,190 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:34:33,190 - sqlalchemy.engine.Engine - INFO - [generated in 0.00093s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:34:33,194 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:34:33,194 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-05-26 17:34:33,199 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:34:33,200 - sqlalchemy.engine.Engine - INFO - [cached since 0.01005s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:34:33,201 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:34:33,203 - sqlalchemy.engine.Engine - INFO - [no key 0.00213s] ()
+2025-05-26 17:34:33,214 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:34:33,214 - sqlalchemy.engine.Engine - INFO - [no key 0.00050s] ()
+2025-05-26 17:34:33,218 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-26 17:34:50,416 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-26 17:34:50,416 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:50,418 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-26 17:34:50,419 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:50,421 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-26 17:34:50,421 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-26 17:34:50,422 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-26 17:34:50,427 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:34:50,427 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:34:50,431 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-26 17:34:50,432 - sqlalchemy.engine.Engine - INFO - [no key 0.00060s] ()
+2025-05-26 17:34:50,436 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-26 17:34:50,437 - sqlalchemy.engine.Engine - INFO - [cached since 0.01024s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-26 17:34:50,439 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-26 17:34:50,440 - sqlalchemy.engine.Engine - INFO - [no key 0.00162s] ()
+2025-05-26 17:34:50,451 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-26 17:34:50,451 - sqlalchemy.engine.Engine - INFO - [no key 0.00061s] ()
+2025-05-26 17:34:50,456 - sqlalchemy.engine.Engine - INFO - COMMIT
