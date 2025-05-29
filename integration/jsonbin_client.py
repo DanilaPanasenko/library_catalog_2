@@ -2,14 +2,14 @@ import os
 from typing import Optional, Dict
 from dotenv import load_dotenv
 
-from services.base import BaseApiClient
+from integration.base import BaseApiClient
 
 load_dotenv()
 
 
 class JsonBinClient(BaseApiClient):
     def __init__(self):
-        super().__init__(base_url="https://api.jsonbin.io/v3")
+        super().__init__(base_url=os.getenv("JSONBIN_URL"))
 
     def _get_default_headers(self) -> Dict[str, str]:
         return {

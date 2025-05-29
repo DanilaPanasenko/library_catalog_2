@@ -4,12 +4,13 @@ from fastapi.responses import JSONResponse
 from core.exceptions import BookNotFoundError
 from core.logger import logger
 from db.db import engine, Base, get_db, AsyncSessionLocal
-from dependencies.books import get_or_create_bin_id
-from interfaces.books import get_storage_adapter, get_jsonbin_client, get_jsonbin_id
+from dependencies.books import get_or_create_bin_id, get_openlibrary_client, get_storage_type, get_jsonbin_client, \
+    get_storage_adapter, get_jsonbin_id, get_book_service
 from schemas.books import BookCreate, BookFilter, BookUpdate, Book
 from schemas.storage_type import StorageType
-from services.jsonbin_client import JsonBinClient
-from services.openlibrary import OpenLibraryClient
+from integration.jsonbin_client import JsonBinClient
+from integration.openlibrary import OpenLibraryClient
+from services.books import BookService
 
 app = FastAPI()
 
@@ -40,19 +41,7 @@ async def startup_event():
         await conn.run_sync(Base.metadata.create_all)  # Создаем новую
 
 
-def get_openlibrary_client() -> OpenLibraryClient:
-    """Зависимость для получения объекта OpenLibrary"""
-    return OpenLibraryClient()
-
-
-async def get_storage_type(
-    storage: StorageType = Query(StorageType.POSTGRES, description="Тип хранилища")
-) -> StorageType:
-    """Зависимости для выбора хранилища"""
-    return storage
-
-
-@app.post("/add_books/", status_code=status.HTTP_201_CREATED, tags=["Книги"])
+@app.post("/add_books/", status_code=status.HTTP_201_CREATED, tags=["Книги"], response_model=Book)
 async def create_book(
     book_data: BookCreate,
     storage: StorageType = Query(StorageType.POSTGRES),
@@ -82,7 +71,7 @@ async def create_book(
         )
 
 
-@app.get("/books/", tags=["Книги"])
+@app.get("/books/", tags=["Книги"], response_model=list[Book])
 async def get_all_books(
     title: Optional[str] = Query(None),
     author: Optional[str] = Query(None),
@@ -90,24 +79,22 @@ async def get_all_books(
     limit: Optional[int] = Query(10, ge=1, le=100),
     offset: Optional[int] = Query(0, ge=0),
     storage_type: StorageType = Query(StorageType.POSTGRES, description="Тип хранилища"),
-    session=Depends(get_db),
-    jsonbin_client=Depends(get_jsonbin_client),
-    jsonbin_id: str = Depends(get_jsonbin_id),
+    book_service: BookService = Depends(get_book_service),
 ):
     """Получение списка книг с фильтрацией"""
-    adapter = get_storage_adapter(storage_type, session, jsonbin_client, jsonbin_id)
     book_filter = BookFilter(
         title=title,
         author=author,
         genre=genre,
         limit=limit,
-        offset=offset
+        offset=offset,
+        storage_type=storage_type
     )
     try:
         logger.info(f"Фильтрация {book_filter}")
-        books = await adapter.get_all_books(book_filter)
+        books = await book_service.get_all_books(book_filter, storage_type)
         logger.info(f"Получаем отфильтрованный список книг{books}")
-        return {"books": books}
+        return books
     except Exception as e:
         logger.error(f"Ошибка получения книг: {str(e)}")
         raise HTTPException(
@@ -116,7 +103,7 @@ async def get_all_books(
         )
 
 
-@app.get("/get_book/{book_id}", tags=["Книги"])
+@app.get("/get_book/{book_id}", tags=["Книги"], response_model=Book)
 async def get_book_by_id(
         book_id: int,
         storage_type: StorageType = Query(StorageType.POSTGRES, description="Тип хранилища"),
@@ -153,7 +140,7 @@ async def get_book_by_id(
         )
 
 
-@app.put("/update_book/{book_id}", tags=["Книги"])
+@app.put("/update_book/{book_id}", tags=["Книги"], response_model=Book)
 async def update_book(
     book_id: int,
     book_data: BookUpdate,

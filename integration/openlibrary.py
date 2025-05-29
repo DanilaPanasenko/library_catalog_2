@@ -1,5 +1,7 @@
 from typing import Optional, Dict, Any
-from services.base import BaseApiClient
+
+from core.logger import logger
+from integration.base import BaseApiClient
 
 
 class OpenLibraryClient(BaseApiClient):
@@ -49,6 +51,7 @@ class OpenLibraryClient(BaseApiClient):
             }
 
         except Exception as e:
+            logger.error(f"Ошибка OpenLibrary API: {str(e)}")
             print(f"Ошибка OpenLibrary API: {str(e)}")
             return None
 

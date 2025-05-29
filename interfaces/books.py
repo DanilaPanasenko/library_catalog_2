@@ -7,11 +7,10 @@ from typing import List, Optional, Dict, Any
 from fastapi import HTTPException
 from sqlalchemy import select, and_
 from db.db import AsyncSessionLocal
-from models.books import BookRepository
+from models.books import BookModel
 from schemas.books import BookFilter, BookCreate, BookUpdate
-from schemas.storage_type import StorageType
-from services.jsonbin_client import JsonBinClient
-from services.openlibrary import OpenLibraryClient
+from integration.jsonbin_client import JsonBinClient
+from integration.openlibrary import OpenLibraryClient
 from dotenv import load_dotenv
 
 
@@ -65,7 +64,7 @@ class PostgresAdapter(StorageAdapter):
                     extra_data["year"] = ol_data["first_publish_year"]
 
         # Создаем книгу, объединяя данные
-        db_book = BookRepository(
+        db_book = BookModel(
             **book_data.model_dump(exclude_unset=True),  # Основные данные из запроса
             **extra_data  # Доп. данные из OpenLibrary
         )
@@ -76,15 +75,15 @@ class PostgresAdapter(StorageAdapter):
 
     async def get_all_books(self, book_filter: BookFilter) -> List[Dict[str, Any]]:
         """Получаем книги по фильтрам либо все"""
-        query = select(BookRepository)
+        query = select(BookModel)
 
         filters = []
         if book_filter.title:
-            filters.append(BookRepository.title == book_filter.title)
+            filters.append(BookModel.title == book_filter.title)
         if book_filter.author:
-            filters.append(BookRepository.author == book_filter.author)
+            filters.append(BookModel.author == book_filter.author)
         if book_filter.genre:
-            filters.append(BookRepository.genre == book_filter.genre)
+            filters.append(BookModel.genre == book_filter.genre)
         # Проверяем есть ли условаия
         if filters:
             query = query.where(and_(*filters))
@@ -100,13 +99,13 @@ class PostgresAdapter(StorageAdapter):
 
     async def get_book(self, book_id: int) -> Optional[Dict[str, Any]]:
         """Получаем книгу по ID"""
-        result = await self.session.execute(select(BookRepository).where(BookRepository.id == book_id))
+        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
         book = result.scalars().first()
         return book
 
     async def update_book(self, book_id: int, book_data: BookUpdate) -> Optional[Dict[str, Any]]:
         """Обнавляем данные о книги"""
-        result = await self.session.execute(select(BookRepository).where(BookRepository.id == book_id))
+        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
         db_book = result.scalars().first()
         if not db_book:
             return None
@@ -121,7 +120,7 @@ class PostgresAdapter(StorageAdapter):
 
     async def delete_book(self, book_id: int) -> bool:
         """Удааяем книгу из бд"""
-        result = await self.session.execute(select(BookRepository).where(BookRepository.id == book_id))
+        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
         db_book = result.scalars().first()
         if not db_book:
             return False
@@ -147,7 +146,7 @@ class JsonBinAdapter(StorageAdapter):
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(
-                    f"https://api.jsonbin.io/v3/b/{self.bin_id}",
+                    f"{os.getenv('JSONBIN_URL')}/b/{self.bin_id}",
                     headers=headers
                 )
                 data = response.json()
@@ -167,7 +166,7 @@ class JsonBinAdapter(StorageAdapter):
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.put(
-                    f"https://api.jsonbin.io/v3/b/{self.bin_id}",
+                    f"{os.getenv('JSONBIN_URL')}/b/{self.bin_id}",
                     json={"books": data},  # Убедитесь, что структура соответствует ожиданиям
                     headers=headers
                 )
@@ -272,33 +271,3 @@ class JsonBinAdapter(StorageAdapter):
         if len(books) < initial_length:
             return await self._update_data(books)
         return False
-
-
-def get_jsonbin_client() -> JsonBinClient:
-    return JsonBinClient()
-
-
-def get_jsonbin_id() -> str:
-    return os.getenv("JSONBIN_BIN_ID")
-
-
-def get_storage_adapter(
-        storage_type: StorageType,
-        session: Optional[AsyncSessionLocal] = None,
-        jsonbin_client: Optional[JsonBinClient] = None,
-        bin_id: Optional[str] = None,
-        openlibrary_client: Optional[OpenLibraryClient] = None
-) -> StorageAdapter:
-    if storage_type == StorageType.POSTGRES:
-        if not session:
-            raise ValueError("Session is required for Postgres adapter")
-        return PostgresAdapter(session, openlibrary_client)
-
-    elif storage_type == StorageType.JSONBIN:
-        if not jsonbin_client:
-            jsonbin_client = get_jsonbin_client()
-        if not bin_id:
-            bin_id = get_jsonbin_id()
-        return JsonBinAdapter(jsonbin_client, bin_id, openlibrary_client)
-
-    raise ValueError(f"Unknown storage type: {storage_type}")

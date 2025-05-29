@@ -17,7 +17,7 @@ class BaseApiClient(ABC):
         """Должен возвращать заголовки по умолчанию для конкретного API"""
         pass
 
-    async def _request(self, method: str, endpoint: str, **kwargs) -> Optional[Dict]:
+    async def _request(self, method: str, endpoint: str, **kwargs) -> dict | None:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
