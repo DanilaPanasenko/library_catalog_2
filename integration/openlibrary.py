@@ -1,13 +1,16 @@
-from typing import Optional, Dict, Any
+import os
 
+
+from typing import Optional, Dict, Any
 from core.logger import logger
 from integration.base import BaseApiClient
+from dotenv import load_dotenv
 
 
 class OpenLibraryClient(BaseApiClient):
     def __init__(self):
-        super().__init__(base_url="https://openlibrary.org")
-        self.covers_url = "https://covers.openlibrary.org/b"
+        super().__init__(base_url=os.getenv("OPENLIBRARY_URL"))
+        self.covers_url = os.getenv("OPENLIBRARY_COVERS_URL")
 
     def _get_default_headers(self) -> Dict[str, str]:
         return {"Accept": "application/json"}
