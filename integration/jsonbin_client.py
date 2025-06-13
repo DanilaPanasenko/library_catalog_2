@@ -14,7 +14,7 @@ class JsonBinClient(BaseApiClient):
     def _get_default_headers(self) -> Dict[str, str]:
         return {
             "X-Master-Key": os.getenv("JSONBIN_API_KEY"),
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
     async def get_data(self, bin_id: str) -> Optional[Dict]:

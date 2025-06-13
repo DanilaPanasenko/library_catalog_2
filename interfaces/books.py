@@ -6,6 +6,8 @@ from abc import ABC, abstractmethod
 from typing import List, Optional, Dict, Any
 from fastapi import HTTPException
 from sqlalchemy import select, and_
+
+from core.logger import logger
 from db.db import AsyncSessionLocal
 from models.books import BookModel
 from schemas.books import BookFilter, BookCreate, BookUpdate
@@ -33,7 +35,9 @@ class StorageAdapter(ABC):
         pass
 
     @abstractmethod
-    async def update_book(self, book_id: int, book_data: BookUpdate) -> Optional[Dict[str, Any]]:
+    async def update_book(
+        self, book_id: int, book_data: BookUpdate
+    ) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -43,7 +47,12 @@ class StorageAdapter(ABC):
 
 class PostgresAdapter(StorageAdapter):
     """Создаем адаптер для Postgres"""
-    def __init__(self, session: AsyncSessionLocal, openlibrary_client: Optional[OpenLibraryClient] = None):
+
+    def __init__(
+        self,
+        session: AsyncSessionLocal,
+        openlibrary_client: Optional[OpenLibraryClient] = None,
+    ):
         self.session = session
         self.openlibrary = openlibrary_client
 
@@ -66,7 +75,7 @@ class PostgresAdapter(StorageAdapter):
         # Создаем книгу, объединяя данные
         db_book = BookModel(
             **book_data.model_dump(exclude_unset=True),  # Основные данные из запроса
-            **extra_data  # Доп. данные из OpenLibrary
+            **extra_data,  # Доп. данные из OpenLibrary
         )
         self.session.add(db_book)
         await self.session.commit()
@@ -99,13 +108,19 @@ class PostgresAdapter(StorageAdapter):
 
     async def get_book(self, book_id: int) -> Optional[Dict[str, Any]]:
         """Получаем книгу по ID"""
-        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
+        result = await self.session.execute(
+            select(BookModel).where(BookModel.id == book_id)
+        )
         book = result.scalars().first()
         return book
 
-    async def update_book(self, book_id: int, book_data: BookUpdate) -> Optional[Dict[str, Any]]:
+    async def update_book(
+        self, book_id: int, book_data: BookUpdate
+    ) -> Optional[Dict[str, Any]]:
         """Обнавляем данные о книги"""
-        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
+        result = await self.session.execute(
+            select(BookModel).where(BookModel.id == book_id)
+        )
         db_book = result.scalars().first()
         if not db_book:
             return None
@@ -120,7 +135,9 @@ class PostgresAdapter(StorageAdapter):
 
     async def delete_book(self, book_id: int) -> bool:
         """Удааяем книгу из бд"""
-        result = await self.session.execute(select(BookModel).where(BookModel.id == book_id))
+        result = await self.session.execute(
+            select(BookModel).where(BookModel.id == book_id)
+        )
         db_book = result.scalars().first()
         if not db_book:
             return False
@@ -133,21 +150,23 @@ class PostgresAdapter(StorageAdapter):
 class JsonBinAdapter(StorageAdapter):
     """Создаем адаптер для JsonBin"""
 
-    def __init__(self, client: JsonBinClient, bin_id: str, openlibrary_client: Optional[OpenLibraryClient] = None):
+    def __init__(
+        self,
+        client: JsonBinClient,
+        bin_id: str,
+        openlibrary_client: Optional[OpenLibraryClient] = None,
+    ):
         self.client = client
         self.bin_id = bin_id
         self.openlibrary = openlibrary_client
 
     async def _get_all_data(self) -> List[Dict[str, Any]]:
         """Получает текущий список книг из хранилища"""
-        headers = {
-            "X-Master-Key": os.getenv("JSONBIN_API_KEY")
-        }
+        headers = {"X-Master-Key": os.getenv("JSONBIN_API_KEY")}
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(
-                    f"{os.getenv('JSONBIN_URL')}/b/{self.bin_id}",
-                    headers=headers
+                    f"{os.getenv('JSONBIN_URL')}/b/{self.bin_id}", headers=headers
                 )
                 data = response.json()
                 # Извлекаем массив книг из объекта
@@ -160,15 +179,17 @@ class JsonBinAdapter(StorageAdapter):
         headers = {
             "Content-Type": "application/json",
             "X-Master-Key": os.getenv("JSONBIN_API_KEY"),
-            "X-Bin-Versioning": "false"
+            "X-Bin-Versioning": "false",
         }
 
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.put(
                     f"{os.getenv('JSONBIN_URL')}/b/{self.bin_id}",
-                    json={"books": data},  # Убедитесь, что структура соответствует ожиданиям
-                    headers=headers
+                    json={
+                        "books": data
+                    },  # Убедитесь, что структура соответствует ожиданиям
+                    headers=headers,
                 )
                 return response.status_code == 200
         except Exception as e:
@@ -181,17 +202,17 @@ class JsonBinAdapter(StorageAdapter):
 
         # Применяем фильтрацию
         if book_filter.title:
-            books = [b for b in books if b.get('title') == book_filter.title]
+            books = [b for b in books if b.get("title") == book_filter.title]
         if book_filter.author:
-            books = [b for b in books if b.get('author') == book_filter.author]
+            books = [b for b in books if b.get("author") == book_filter.author]
         if book_filter.genre:
-            books = [b for b in books if b.get('genre') == book_filter.genre]
+            books = [b for b in books if b.get("genre") == book_filter.genre]
 
         # Применяем пагинацию
         if book_filter.offset:
-            books = books[book_filter.offset:]
+            books = books[book_filter.offset :]
         if book_filter.limit:
-            books = books[:book_filter.limit]
+            books = books[: book_filter.limit]
 
         return books
 
@@ -199,7 +220,7 @@ class JsonBinAdapter(StorageAdapter):
         """Получить книгу по ID"""
         books = await self._get_all_data()
         for book in books:
-            if isinstance(book, dict) and book.get('id') == book_id:
+            if isinstance(book, dict) and book.get("id") == book_id:
                 return book
         return None
 
@@ -215,7 +236,7 @@ class JsonBinAdapter(StorageAdapter):
                     "cover_url": ol_data.get("cover_url"),
                     "description": ol_data.get("description"),
                     "author": ol_data.get("author", book_data.author),
-                    "year": ol_data.get("first_publish_year", book_data.year)
+                    "year": ol_data.get("first_publish_year", book_data.year),
                 }
 
         books = await self._get_all_data()
@@ -224,15 +245,14 @@ class JsonBinAdapter(StorageAdapter):
         new_book = {
             "id": new_id,
             **book_data.model_dump(exclude_unset=True),
-            **extra_data
+            **extra_data,
         }
 
         books.append(new_book)
         success = await self._update_data(books)
         if not success:
             raise HTTPException(
-                status_code=500,
-                detail="Не удалось сохранить книгу в JSONBin"
+                status_code=500, detail="Не удалось сохранить книгу в JSONBin"
             )
         return new_book
 
@@ -240,20 +260,19 @@ class JsonBinAdapter(StorageAdapter):
         """Проверяет существование bin"""
         try:
             await self.client.get_data(self.bin_id)
-        except:
+        except Exception as e:
+            logger.error(f"Failed to get data: {str(e)}")
             await self.client.create_bin({"books": []})
 
     async def update_book(
-            self,
-            book_id: int,
-            book_data: BookUpdate
+        self, book_id: int, book_data: BookUpdate
     ) -> Optional[Dict[str, Any]]:
         """Обновить данные книги"""
         books = await self._get_all_data()
         updated_book = None
 
         for book in books:
-            if isinstance(book, dict) and book.get('id') == book_id:
+            if isinstance(book, dict) and book.get("id") == book_id:
                 book.update(book_data.model_dump(exclude_unset=True))
                 updated_book = book
                 break
@@ -266,7 +285,7 @@ class JsonBinAdapter(StorageAdapter):
         """Удалить книгу"""
         books = await self._get_all_data()
         initial_length = len(books)
-        books = [b for b in books if isinstance(b, dict) and b.get('id') != book_id]
+        books = [b for b in books if isinstance(b, dict) and b.get("id") != book_id]
 
         if len(books) < initial_length:
             return await self._update_data(books)

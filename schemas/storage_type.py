@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 class StorageType(str, Enum):
     """Выбираем способ хранения данных"""
+
     POSTGRES = "postgres"
     JSONBIN = "jsonbin"
 
@@ -18,9 +19,5 @@ class StorageTypeResponse(BaseModel):
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
-        json_schema_extra={
-            "example": {
-                "storage_type": "postgres"
-            }
-        }
+        json_schema_extra={"example": {"storage_type": "postgres"}},
     )

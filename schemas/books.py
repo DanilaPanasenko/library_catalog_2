@@ -4,12 +4,14 @@ from pydantic import BaseModel, HttpUrl
 
 class AvailabilityStatus(str, Enum):
     """Для определения availability"""
+
     AVAILABLE = "available"
     BORROWED = "borrowed"
 
 
 class BookBase(BaseModel):
     """Базовая pydentic схема для книг"""
+
     title: str
     author: str
     year: int
@@ -22,12 +24,14 @@ class BookBase(BaseModel):
 
 class BookCreate(BookBase):
     """pydentic схема для создания книг"""
+
     class Config:
         extra = "forbid"
 
 
 class BookUpdate(BaseModel):
     """pydentic схема для изменения книг"""
+
     title: str | None
     author: str | None
     year: int | None
@@ -38,6 +42,7 @@ class BookUpdate(BaseModel):
 
 class Book(BookBase):
     """Полная pydentic схема с ID книги"""
+
     id: int
     # Дополнительные поля с информацией из Open Library API
     description: str | None = None
@@ -53,6 +58,3 @@ class BookFilter(BaseModel):
     genre: str | None = None
     limit: int | None = None
     offset: int | None = None
-
-
-

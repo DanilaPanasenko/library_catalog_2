@@ -2,13 +2,13 @@ import json
 import httpx
 
 
-from typing import Optional, Dict
+from typing import Dict
 from abc import ABC, abstractmethod
 
 
 class BaseApiClient(ABC):
     def __init__(self, base_url: str, timeout: float = 10.0):
-        self.base_url = base_url.rstrip('/')
+        self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.headers = self._get_default_headers()
 
@@ -22,10 +22,7 @@ class BaseApiClient(ABC):
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.request(
-                    method,
-                    url,
-                    headers=self.headers,
-                    **kwargs
+                    method, url, headers=self.headers, **kwargs
                 )
                 response.raise_for_status()
                 return response.json()

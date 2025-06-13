@@ -3,6 +3,8 @@ from typing import Optional
 
 from fastapi import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.logger import logger
 from db.db import AsyncSessionLocal
 from interfaces.books import JsonBinAdapter, StorageAdapter, PostgresAdapter
 from schemas.books import BookFilter
@@ -23,7 +25,7 @@ async def get_db() -> AsyncSession:
 
 
 async def get_storage_type(
-    storage: StorageType = Query(StorageType.POSTGRES)
+    storage: StorageType = Query(StorageType.POSTGRES),
 ) -> StorageType:  # Возвращаем StorageType, а не str
     """Зависимости для выбора хранилища"""
     return storage  # Enum уже гарантирует, что значение валидно
@@ -37,13 +39,16 @@ def get_jsonbin_client() -> JsonBinClient:
     return JsonBinClient()
 
 
-async def get_or_create_bin_id(bin_id=Depends(get_jsonbin_id), client=Depends(get_jsonbin_client)) -> str:
+async def get_or_create_bin_id(
+    bin_id=Depends(get_jsonbin_id), client=Depends(get_jsonbin_client)
+) -> str:
     """Получает или создает новый bin"""
     bin_id = bin_id
     client = client
     try:
         await client.get_data(bin_id)
-    except:
+    except Exception as e:
+        logger.info(f"Нет bin_id: {str(e)}")
         new_bin_id = await client.create_bin([])
         if new_bin_id:
             bin_id = new_bin_id
@@ -56,26 +61,28 @@ def get_openlibrary_client() -> OpenLibraryClient:
 
 
 def get_jsonbin_adapter(
-        jsonbin_client: JsonBinClient = Depends(get_jsonbin_client),
-        bin_id: str = Depends(get_or_create_bin_id),
-        openlibrary_client: OpenLibraryClient = Depends(get_openlibrary_client)):
+    jsonbin_client: JsonBinClient = Depends(get_jsonbin_client),
+    bin_id: str = Depends(get_or_create_bin_id),
+    openlibrary_client: OpenLibraryClient = Depends(get_openlibrary_client),
+):
     return JsonBinAdapter(jsonbin_client, bin_id, openlibrary_client)
 
 
 def get_postgres_adapter(
-        session: AsyncSessionLocal = Depends(get_db),
-        openlibrary_client: OpenLibraryClient = Depends(get_openlibrary_client)):
+    session: AsyncSessionLocal = Depends(get_db),
+    openlibrary_client: OpenLibraryClient = Depends(get_openlibrary_client),
+):
     return PostgresAdapter(session, openlibrary_client)
 
 
 def get_storage_adapter(
-        storage_type: StorageType,
-        session: Optional[AsyncSessionLocal] = None,
-        jsonbin_client: Optional[JsonBinClient] = None,
-        bin_id: Optional[str] = None,
-        openlibrary_client: Optional[OpenLibraryClient] = None,
-        client=Depends(get_jsonbin_client),
-        jsonbin_id=Depends(get_jsonbin_id)
+    storage_type: StorageType,
+    session: Optional[AsyncSessionLocal] = None,
+    jsonbin_client: Optional[JsonBinClient] = None,
+    bin_id: Optional[str] = None,
+    openlibrary_client: Optional[OpenLibraryClient] = None,
+    client=Depends(get_jsonbin_client),
+    jsonbin_id=Depends(get_jsonbin_id),
 ) -> StorageAdapter:
     if storage_type == StorageType.POSTGRES:
         if not session:
@@ -97,20 +104,17 @@ async def get_book_filter(
     author: Optional[str] = Query(None),
     genre: Optional[str] = Query(None),
     limit: Optional[int] = Query(None),
-    offset: Optional[int] = Query(None)
+    offset: Optional[int] = Query(None),
 ) -> BookFilter:
     """Зависимость для получения фильтра книг"""
     return BookFilter(
-        title=title,
-        author=author,
-        genre=genre,
-        limit=limit,
-        offset=offset
+        title=title, author=author, genre=genre, limit=limit, offset=offset
     )
 
 
-def get_book_service(storage_type: StorageType = Query(StorageType.POSTGRES),
-                     adapter1=Depends(get_postgres_adapter),
-                     adapter2=Depends(get_jsonbin_adapter)
-                     ):
+def get_book_service(
+    storage_type: StorageType = Query(StorageType.POSTGRES),
+    adapter1=Depends(get_postgres_adapter),
+    adapter2=Depends(get_jsonbin_adapter),
+):
     return BookService(adapter1, adapter2)

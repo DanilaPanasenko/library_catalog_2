@@ -1,0 +1,280 @@
+2025-06-13 00:15:30,976 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-13 00:15:30,976 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:15:30,979 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-13 00:15:30,980 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:15:30,982 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-13 00:15:30,982 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:15:30,983 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:15:30,987 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:15:30,988 - sqlalchemy.engine.Engine - INFO - [generated in 0.00110s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:15:31,018 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-06-13 00:15:31,018 - sqlalchemy.engine.Engine - INFO - [no key 0.00058s] ()
+2025-06-13 00:15:31,038 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:15:31,038 - sqlalchemy.engine.Engine - INFO - [cached since 0.05109s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:15:31,040 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-06-13 00:15:31,042 - sqlalchemy.engine.Engine - INFO - [no key 0.00175s] ()
+2025-06-13 00:15:31,076 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-06-13 00:15:31,076 - sqlalchemy.engine.Engine - INFO - [no key 0.00050s] ()
+2025-06-13 00:15:31,080 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.title IS 'Наименование книги'
+2025-06-13 00:15:31,081 - sqlalchemy.engine.Engine - INFO - [no key 0.00053s] ()
+2025-06-13 00:15:31,083 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.author IS 'Имя автора'
+2025-06-13 00:15:31,083 - sqlalchemy.engine.Engine - INFO - [no key 0.00048s] ()
+2025-06-13 00:15:31,084 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.year IS 'Год издания книги'
+2025-06-13 00:15:31,085 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:15:31,085 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.genre IS 'Жанр книги'
+2025-06-13 00:15:31,086 - sqlalchemy.engine.Engine - INFO - [no key 0.00058s] ()
+2025-06-13 00:15:31,087 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.pages IS 'Количество страниц книги'
+2025-06-13 00:15:31,087 - sqlalchemy.engine.Engine - INFO - [no key 0.00041s] ()
+2025-06-13 00:15:31,088 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.availability IS 'Статус доступности'
+2025-06-13 00:15:31,089 - sqlalchemy.engine.Engine - INFO - [no key 0.00041s] ()
+2025-06-13 00:15:31,089 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.cover_url IS 'Ссылка на обложку'
+2025-06-13 00:15:31,090 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:15:31,091 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.description IS 'Описание книги'
+2025-06-13 00:15:31,091 - sqlalchemy.engine.Engine - INFO - [no key 0.00039s] ()
+2025-06-13 00:15:31,092 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:16:21,924 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-13 00:16:21,925 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:21,927 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-13 00:16:21,927 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:21,929 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-13 00:16:21,929 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:21,931 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:16:21,935 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:16:21,936 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:16:21,940 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-06-13 00:16:21,940 - sqlalchemy.engine.Engine - INFO - [no key 0.00060s] ()
+2025-06-13 00:16:21,945 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:16:21,946 - sqlalchemy.engine.Engine - INFO - [cached since 0.01051s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:16:21,948 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-06-13 00:16:21,950 - sqlalchemy.engine.Engine - INFO - [no key 0.00213s] ()
+2025-06-13 00:16:21,965 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-06-13 00:16:21,966 - sqlalchemy.engine.Engine - INFO - [no key 0.00064s] ()
+2025-06-13 00:16:21,971 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.title IS 'Наименование книги'
+2025-06-13 00:16:21,971 - sqlalchemy.engine.Engine - INFO - [no key 0.00067s] ()
+2025-06-13 00:16:21,973 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.author IS 'Имя автора'
+2025-06-13 00:16:21,973 - sqlalchemy.engine.Engine - INFO - [no key 0.00048s] ()
+2025-06-13 00:16:21,974 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.year IS 'Год издания книги'
+2025-06-13 00:16:21,975 - sqlalchemy.engine.Engine - INFO - [no key 0.00108s] ()
+2025-06-13 00:16:21,977 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.genre IS 'Жанр книги'
+2025-06-13 00:16:21,977 - sqlalchemy.engine.Engine - INFO - [no key 0.00047s] ()
+2025-06-13 00:16:21,979 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.pages IS 'Количество страниц книги'
+2025-06-13 00:16:21,979 - sqlalchemy.engine.Engine - INFO - [no key 0.00070s] ()
+2025-06-13 00:16:21,981 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.availability IS 'Статус доступности'
+2025-06-13 00:16:21,981 - sqlalchemy.engine.Engine - INFO - [no key 0.00050s] ()
+2025-06-13 00:16:21,983 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.cover_url IS 'Ссылка на обложку'
+2025-06-13 00:16:21,983 - sqlalchemy.engine.Engine - INFO - [no key 0.00046s] ()
+2025-06-13 00:16:21,984 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.description IS 'Описание книги'
+2025-06-13 00:16:21,984 - sqlalchemy.engine.Engine - INFO - [no key 0.00043s] ()
+2025-06-13 00:16:21,985 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:16:47,344 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-13 00:16:47,344 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:47,347 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-13 00:16:47,347 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:47,349 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-13 00:16:47,349 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:16:47,351 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:16:47,355 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:16:47,356 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:16:47,360 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-06-13 00:16:47,360 - sqlalchemy.engine.Engine - INFO - [no key 0.00055s] ()
+2025-06-13 00:16:47,365 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:16:47,365 - sqlalchemy.engine.Engine - INFO - [cached since 0.01021s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:16:47,368 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-06-13 00:16:47,370 - sqlalchemy.engine.Engine - INFO - [no key 0.00185s] ()
+2025-06-13 00:16:47,380 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-06-13 00:16:47,381 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
+2025-06-13 00:16:47,385 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.title IS 'Наименование книги'
+2025-06-13 00:16:47,386 - sqlalchemy.engine.Engine - INFO - [no key 0.00053s] ()
+2025-06-13 00:16:47,387 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.author IS 'Имя автора'
+2025-06-13 00:16:47,387 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:16:47,388 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.year IS 'Год издания книги'
+2025-06-13 00:16:47,388 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:16:47,389 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.genre IS 'Жанр книги'
+2025-06-13 00:16:47,390 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:16:47,391 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.pages IS 'Количество страниц книги'
+2025-06-13 00:16:47,391 - sqlalchemy.engine.Engine - INFO - [no key 0.00042s] ()
+2025-06-13 00:16:47,392 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.availability IS 'Статус доступности'
+2025-06-13 00:16:47,392 - sqlalchemy.engine.Engine - INFO - [no key 0.00043s] ()
+2025-06-13 00:16:47,393 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.cover_url IS 'Ссылка на обложку'
+2025-06-13 00:16:47,394 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
+2025-06-13 00:16:47,395 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.description IS 'Описание книги'
+2025-06-13 00:16:47,395 - sqlalchemy.engine.Engine - INFO - [no key 0.00041s] ()
+2025-06-13 00:16:47,396 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:17:52,865 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-13 00:17:52,866 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:17:52,868 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-13 00:17:52,868 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:17:52,870 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-13 00:17:52,870 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:17:52,872 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:17:52,877 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:17:52,878 - sqlalchemy.engine.Engine - INFO - [generated in 0.00129s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:17:52,881 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-06-13 00:17:52,882 - sqlalchemy.engine.Engine - INFO - [no key 0.00056s] ()
+2025-06-13 00:17:52,886 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:17:52,887 - sqlalchemy.engine.Engine - INFO - [cached since 0.01077s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:17:52,890 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-06-13 00:17:52,892 - sqlalchemy.engine.Engine - INFO - [no key 0.00218s] ()
+2025-06-13 00:17:52,902 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-06-13 00:17:52,903 - sqlalchemy.engine.Engine - INFO - [no key 0.00050s] ()
+2025-06-13 00:17:52,907 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.title IS 'Наименование книги'
+2025-06-13 00:17:52,908 - sqlalchemy.engine.Engine - INFO - [no key 0.00062s] ()
+2025-06-13 00:17:52,909 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.author IS 'Имя автора'
+2025-06-13 00:17:52,910 - sqlalchemy.engine.Engine - INFO - [no key 0.00042s] ()
+2025-06-13 00:17:52,910 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.year IS 'Год издания книги'
+2025-06-13 00:17:52,911 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:17:52,912 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.genre IS 'Жанр книги'
+2025-06-13 00:17:52,912 - sqlalchemy.engine.Engine - INFO - [no key 0.00038s] ()
+2025-06-13 00:17:52,913 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.pages IS 'Количество страниц книги'
+2025-06-13 00:17:52,913 - sqlalchemy.engine.Engine - INFO - [no key 0.00040s] ()
+2025-06-13 00:17:52,914 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.availability IS 'Статус доступности'
+2025-06-13 00:17:52,915 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-06-13 00:17:52,916 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.cover_url IS 'Ссылка на обложку'
+2025-06-13 00:17:52,916 - sqlalchemy.engine.Engine - INFO - [no key 0.00053s] ()
+2025-06-13 00:17:52,917 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.description IS 'Описание книги'
+2025-06-13 00:17:52,918 - sqlalchemy.engine.Engine - INFO - [no key 0.00045s] ()
+2025-06-13 00:17:52,919 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:18:45,459 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-13 00:18:45,460 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:18:45,462 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-13 00:18:45,462 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:18:45,463 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-13 00:18:45,464 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-06-13 00:18:45,466 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:18:45,471 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:18:45,471 - sqlalchemy.engine.Engine - INFO - [generated in 0.00098s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:18:45,475 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-06-13 00:18:45,476 - sqlalchemy.engine.Engine - INFO - [no key 0.00062s] ()
+2025-06-13 00:18:45,480 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-06-13 00:18:45,481 - sqlalchemy.engine.Engine - INFO - [cached since 0.01073s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-06-13 00:18:45,483 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-06-13 00:18:45,485 - sqlalchemy.engine.Engine - INFO - [no key 0.00168s] ()
+2025-06-13 00:18:45,507 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-06-13 00:18:45,507 - sqlalchemy.engine.Engine - INFO - [no key 0.00052s] ()
+2025-06-13 00:18:45,518 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.title IS 'Наименование книги'
+2025-06-13 00:18:45,519 - sqlalchemy.engine.Engine - INFO - [no key 0.00058s] ()
+2025-06-13 00:18:45,520 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.author IS 'Имя автора'
+2025-06-13 00:18:45,520 - sqlalchemy.engine.Engine - INFO - [no key 0.00042s] ()
+2025-06-13 00:18:45,521 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.year IS 'Год издания книги'
+2025-06-13 00:18:45,522 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
+2025-06-13 00:18:45,523 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.genre IS 'Жанр книги'
+2025-06-13 00:18:45,524 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
+2025-06-13 00:18:45,525 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.pages IS 'Количество страниц книги'
+2025-06-13 00:18:45,525 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
+2025-06-13 00:18:45,526 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.availability IS 'Статус доступности'
+2025-06-13 00:18:45,527 - sqlalchemy.engine.Engine - INFO - [no key 0.00044s] ()
+2025-06-13 00:18:45,528 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.cover_url IS 'Ссылка на обложку'
+2025-06-13 00:18:45,528 - sqlalchemy.engine.Engine - INFO - [no key 0.00053s] ()
+2025-06-13 00:18:45,529 - sqlalchemy.engine.Engine - INFO - COMMENT ON COLUMN books.description IS 'Описание книги'
+2025-06-13 00:18:45,530 - sqlalchemy.engine.Engine - INFO - [no key 0.00044s] ()
+2025-06-13 00:18:45,531 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:20:04,688 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-06-13 00:20:04,703 - book_catalog - INFO - Создания книги: 'Harry Potter' | Хранилище: postgres
+2025-06-13 00:20:05,780 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3AHarry+Potter&limit=1 "HTTP/1.1 200 OK"
+2025-06-13 00:20:06,809 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82548W.json "HTTP/1.1 200 OK"
+2025-06-13 00:20:06,830 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:20:06,837 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, availability, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR) RETURNING books.id
+2025-06-13 00:20:06,839 - sqlalchemy.engine.Engine - INFO - [generated in 0.00239s] ('Harry Potter', 'Test Author', 2023, 'Fantasy', 1000, <AvailabilityStatus.AVAILABLE: 'available'>, 'https://covers.openlibrary.org/b/id/10523466-L.jpg', 'After the Dementors’ attack on his cousin Dudley, Harry knows he is about to become Voldemort’s next target.\r\n\r\nAlthough many are denying the Dar ... (651 characters truncated) ... /works/OL17915213W/Harry_Potter_and_the_Order_of_the_Phoenix_Chapters_24-30)\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-order-phoenix/')
+2025-06-13 00:20:06,852 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-13 00:20:06,854 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-13 00:20:06,856 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-06-13 00:20:06,857 - sqlalchemy.engine.Engine - INFO - [generated in 0.00084s] (1,)
+2025-06-13 00:20:06,859 - book_catalog - INFO - Книга создана: <models.books.BookModel object at 0x000001E520C64410>
+2025-06-13 00:20:06,860 - sqlalchemy.engine.Engine - INFO - ROLLBACK

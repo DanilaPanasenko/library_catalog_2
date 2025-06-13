@@ -19,7 +19,7 @@ def setup_logger():
         handlers=[
             logging.FileHandler(LOG_FILE),  # Запись в файл
             logging.StreamHandler(),  # Вывод в консоль
-        ]
+        ],
     )
     # Пример логгера для конкретного модуля
     logger = logging.getLogger("book_catalog")

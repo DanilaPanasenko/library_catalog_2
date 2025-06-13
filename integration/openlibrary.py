@@ -4,7 +4,6 @@ import os
 from typing import Optional, Dict, Any
 from core.logger import logger
 from integration.base import BaseApiClient
-from dotenv import load_dotenv
 
 
 class OpenLibraryClient(BaseApiClient):
@@ -15,14 +14,14 @@ class OpenLibraryClient(BaseApiClient):
     def _get_default_headers(self) -> Dict[str, str]:
         return {"Accept": "application/json"}
 
-    async def search_books(self, title: str, limit: int = 1) -> Optional[Dict[str, Any]]:
+    async def search_books(
+        self, title: str, limit: int = 1
+    ) -> Optional[Dict[str, Any]]:
         """Поиск книг по названию с получением обложки и описания"""
         try:
             # Шаг 1: Поиск книг
             search_data = await self._request(
-                "GET",
-                "search.json",
-                params={"q": f"title:{title}", "limit": limit}
+                "GET", "search.json", params={"q": f"title:{title}", "limit": limit}
             )
 
             if not search_data or not search_data.get("docs"):
@@ -50,7 +49,7 @@ class OpenLibraryClient(BaseApiClient):
                 "cover_url": cover_url,
                 "description": description,
                 "edition_key": book.get("edition_key", [""])[0],
-                "work_key": work_key if "work_key" in locals() else None
+                "work_key": work_key if "work_key" in locals() else None,
             }
 
         except Exception as e:
