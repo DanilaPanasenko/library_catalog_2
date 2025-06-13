@@ -1,0 +1,314 @@
+2025-05-28 00:00:55,280 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-28 00:00:55,281 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:00:55,283 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-28 00:00:55,284 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:00:55,285 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-28 00:00:55,286 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:00:55,287 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:00:55,291 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-28 00:00:55,292 - sqlalchemy.engine.Engine - INFO - [generated in 0.00110s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-28 00:00:55,295 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-28 00:00:55,296 - sqlalchemy.engine.Engine - INFO - [no key 0.00097s] ()
+2025-05-28 00:00:55,301 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-28 00:00:55,302 - sqlalchemy.engine.Engine - INFO - [cached since 0.01104s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-28 00:00:55,304 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-28 00:00:55,306 - sqlalchemy.engine.Engine - INFO - [no key 0.00172s] ()
+2025-05-28 00:00:55,316 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-28 00:00:55,316 - sqlalchemy.engine.Engine - INFO - [no key 0.00050s] ()
+2025-05-28 00:00:55,320 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-28 00:01:00,287 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:00,296 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-28 00:01:01,384 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-28 00:01:02,553 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-28 00:01:02,572 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:01:02,578 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, availability, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR) RETURNING books.id
+2025-05-28 00:01:02,579 - sqlalchemy.engine.Engine - INFO - [generated in 0.00128s] ('harry potter', 'J.K', 1997, 'Ph', 3000, <AvailabilityStatus.AVAILABLE: 'available'>, 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wiza ... (255 characters truncated) ... st of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/')
+2025-05-28 00:01:02,583 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-28 00:01:02,586 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:01:02,590 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:01:02,591 - sqlalchemy.engine.Engine - INFO - [generated in 0.00115s] (1,)
+2025-05-28 00:01:02,593 - book_catalog - INFO - Книга создана: <models.books.BookRepository object at 0x00000236102F7F80>
+2025-05-28 00:01:02,595 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:01:19,927 - book_catalog - INFO - Получаем книгу с ID: 1
+2025-05-28 00:01:19,928 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:01:19,930 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:01:19,933 - sqlalchemy.engine.Engine - INFO - [generated in 0.00302s] (1,)
+2025-05-28 00:01:19,936 - sqlalchemy.engine.Engine - INFO - UPDATE books SET pages=$1::INTEGER WHERE books.id = $2::INTEGER
+2025-05-28 00:01:19,937 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] (300, 1)
+2025-05-28 00:01:19,940 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-28 00:01:19,942 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:01:19,942 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:01:19,943 - sqlalchemy.engine.Engine - INFO - [cached since 17.35s ago] (1,)
+2025-05-28 00:01:19,944 - book_catalog - INFO - Возвращаем книгу с обнавлением <models.books.BookRepository object at 0x00000236107BEA80>
+2025-05-28 00:01:19,945 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:01:35,720 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:35,723 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: jsonbin
+2025-05-28 00:01:36,668 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:37,804 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-28 00:01:38,897 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-28 00:01:39,906 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:40,908 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:40,912 - book_catalog - INFO - Книга создана: {'id': 15, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': <AvailabilityStatus.AVAILABLE: 'available'>, 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-28 00:01:51,616 - book_catalog - INFO - Фильтрация title=None author=None genre=None limit=15 offset=0
+2025-05-28 00:01:52,459 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:01:52,463 - book_catalog - INFO - Получаем отфильтрованный список книг[{'id': 1, 'title': 'книга 1', 'author': 'Я', 'year': 2025, 'genre': 'python', 'pages': 300, 'availability': True}, {'id': 3, 'title': 'Книга проверка', 'author': 'ну я', 'genre': 'python', 'year': 2025, 'pages': 0, 'availability': 'available'}, {'id': 4, 'title': 'Толстый', 'author': 'Лев Толстой', 'genre': 'python', 'year': 1000, 'pages': 1000, 'availability': 'available'}, {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}, {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}, {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}, {'id': 8, 'title': 'Dune', 'author': 'Frank Herbert', 'year': 1965, 'genre': 'Science Fiction', 'pages': 412, 'cover_url': 'https://covers.openlibrary.org/b/id/11481354-L.jpg', 'description': 'Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the "spice" melange, a drug capable of extending life and enhancing consciousness. Coveted across the known universe, melange is a prize worth killing for...\r\n\r\nWhen House Atreides is betrayed, the destruction of Paul\'s family will set the boy on a journey toward a destiny greater than he could ever have imagined. And as he evolves into the mysterious man known as Muad\'Dib, he will bring to fruition humankind\'s most ancient and unattainable dream.\r\n\r\nA stunning blend of adventure and mysticism, environmentalism and politics, Dune won the first Nebula Award, shared the Hugo Award, and formed the basis of what is undoubtedly the grandest epic in science fiction.'}, {'id': 9, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 10, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Phentesy', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'PH', 'pages': 300, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 12, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 13, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 14, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 15, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}]
+2025-05-28 00:01:52,481 - book_catalog - CRITICAL - Необработанная ошибка: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 327, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+
+2025-05-28 00:10:02,185 - book_catalog - INFO - Поиск книги по ID: 13
+2025-05-28 00:10:04,357 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:10:04,362 - book_catalog - INFO - Получаем книгу по ID: {'id': 13, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-28 00:10:30,969 - book_catalog - INFO - Получаем книгу с ID: 13
+2025-05-28 00:10:32,057 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:10:33,104 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:10:33,105 - book_catalog - INFO - Возвращаем книгу с обнавлением {'id': 13, 'title': 'harry potter', 'author': 'J.K', 'year': 1997, 'genre': 'Ph', 'pages': 300, 'availability': <AvailabilityStatus.AVAILABLE: 'available'>, 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
+2025-05-28 00:10:39,966 - book_catalog - INFO - Фильтрация title=None author=None genre=None limit=15 offset=0
+2025-05-28 00:10:41,019 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:10:41,022 - book_catalog - INFO - Получаем отфильтрованный список книг[{'id': 1, 'title': 'книга 1', 'author': 'Я', 'year': 2025, 'genre': 'python', 'pages': 300, 'availability': True}, {'id': 3, 'title': 'Книга проверка', 'author': 'ну я', 'genre': 'python', 'year': 2025, 'pages': 0, 'availability': 'available'}, {'id': 4, 'title': 'Толстый', 'author': 'Лев Толстой', 'genre': 'python', 'year': 1000, 'pages': 1000, 'availability': 'available'}, {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}, {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}, {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}, {'id': 8, 'title': 'Dune', 'author': 'Frank Herbert', 'year': 1965, 'genre': 'Science Fiction', 'pages': 412, 'cover_url': 'https://covers.openlibrary.org/b/id/11481354-L.jpg', 'description': 'Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the "spice" melange, a drug capable of extending life and enhancing consciousness. Coveted across the known universe, melange is a prize worth killing for...\r\n\r\nWhen House Atreides is betrayed, the destruction of Paul\'s family will set the boy on a journey toward a destiny greater than he could ever have imagined. And as he evolves into the mysterious man known as Muad\'Dib, he will bring to fruition humankind\'s most ancient and unattainable dream.\r\n\r\nA stunning blend of adventure and mysticism, environmentalism and politics, Dune won the first Nebula Award, shared the Hugo Award, and formed the basis of what is undoubtedly the grandest epic in science fiction.'}, {'id': 9, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 10, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Phentesy', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'PH', 'pages': 300, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 12, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 13, 'title': 'harry potter', 'author': 'J.K', 'year': 1997, 'genre': 'Ph', 'pages': 300, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 14, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 15, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}]
+2025-05-28 00:10:41,031 - book_catalog - CRITICAL - Необработанная ошибка: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 327, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+
+2025-05-28 00:10:45,753 - book_catalog - INFO - Фильтрация title=None author=None genre=None limit=10 offset=0
+2025-05-28 00:10:46,836 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:10:46,838 - book_catalog - INFO - Получаем отфильтрованный список книг[{'id': 1, 'title': 'книга 1', 'author': 'Я', 'year': 2025, 'genre': 'python', 'pages': 300, 'availability': True}, {'id': 3, 'title': 'Книга проверка', 'author': 'ну я', 'genre': 'python', 'year': 2025, 'pages': 0, 'availability': 'available'}, {'id': 4, 'title': 'Толстый', 'author': 'Лев Толстой', 'genre': 'python', 'year': 1000, 'pages': 1000, 'availability': 'available'}, {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}, {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}, {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}, {'id': 8, 'title': 'Dune', 'author': 'Frank Herbert', 'year': 1965, 'genre': 'Science Fiction', 'pages': 412, 'cover_url': 'https://covers.openlibrary.org/b/id/11481354-L.jpg', 'description': 'Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the "spice" melange, a drug capable of extending life and enhancing consciousness. Coveted across the known universe, melange is a prize worth killing for...\r\n\r\nWhen House Atreides is betrayed, the destruction of Paul\'s family will set the boy on a journey toward a destiny greater than he could ever have imagined. And as he evolves into the mysterious man known as Muad\'Dib, he will bring to fruition humankind\'s most ancient and unattainable dream.\r\n\r\nA stunning blend of adventure and mysticism, environmentalism and politics, Dune won the first Nebula Award, shared the Hugo Award, and formed the basis of what is undoubtedly the grandest epic in science fiction.'}, {'id': 9, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 10, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Phentesy', 'pages': 1500, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}, {'id': 11, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'PH', 'pages': 300, 'availability': 'available', 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}]
+2025-05-28 00:10:46,841 - book_catalog - CRITICAL - Необработанная ошибка: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+Traceback (most recent call last):
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 327, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\library_catalog_2\venv\Lib\site-packages\fastapi\routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 7 validation errors:
+  {'type': 'enum', 'loc': ('response', 0, 'availability'), 'msg': "Input should be 'available' or 'borrowed'", 'input': True, 'ctx': {'expected': "'available' or 'borrowed'"}}
+  {'type': 'missing', 'loc': ('response', 3, 'year'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 3, 'pages'), 'msg': 'Field required', 'input': {'id': 5, 'title': 'проверка', 'author': 'проверка', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'year'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 4, 'pages'), 'msg': 'Field required', 'input': {'id': 6, 'title': 'проверка2', 'author': 'проверка2', 'genre': 'проверка'}}
+  {'type': 'missing', 'loc': ('response', 5, 'year'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+  {'type': 'missing', 'loc': ('response', 5, 'pages'), 'msg': 'Field required', 'input': {'id': 7, 'title': 'string', 'author': 'string', 'genre': 'string'}}
+
+2025-05-28 00:16:28,230 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-05-28 00:16:28,231 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:16:28,233 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-05-28 00:16:28,234 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:16:28,235 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-05-28 00:16:28,236 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-05-28 00:16:28,237 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:16:28,241 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-28 00:16:28,242 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-28 00:16:28,246 - sqlalchemy.engine.Engine - INFO - 
+DROP TABLE books
+2025-05-28 00:16:28,246 - sqlalchemy.engine.Engine - INFO - [no key 0.00062s] ()
+2025-05-28 00:16:28,252 - sqlalchemy.engine.Engine - INFO - SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+2025-05-28 00:16:28,253 - sqlalchemy.engine.Engine - INFO - [cached since 0.01158s ago] ('books', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+2025-05-28 00:16:28,255 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE books (
+	id SERIAL NOT NULL, 
+	title VARCHAR NOT NULL, 
+	author VARCHAR NOT NULL, 
+	year INTEGER NOT NULL, 
+	genre VARCHAR NOT NULL, 
+	pages INTEGER NOT NULL, 
+	availability VARCHAR(20) NOT NULL, 
+	cover_url VARCHAR, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-05-28 00:16:28,257 - sqlalchemy.engine.Engine - INFO - [no key 0.00190s] ()
+2025-05-28 00:16:28,267 - sqlalchemy.engine.Engine - INFO - CREATE INDEX ix_books_id ON books (id)
+2025-05-28 00:16:28,268 - sqlalchemy.engine.Engine - INFO - [no key 0.00056s] ()
+2025-05-28 00:16:28,272 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-28 00:16:39,371 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:16:39,386 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: postgres
+2025-05-28 00:16:40,481 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-28 00:16:41,557 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-28 00:16:41,580 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:16:41,584 - sqlalchemy.engine.Engine - INFO - INSERT INTO books (title, author, year, genre, pages, availability, cover_url, description) VALUES ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::VARCHAR, $5::INTEGER, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR) RETURNING books.id
+2025-05-28 00:16:41,585 - sqlalchemy.engine.Engine - INFO - [generated in 0.00161s] ('harry potter', 'J.K', 1997, 'Ph', 3000, <AvailabilityStatus.AVAILABLE: 'available'>, 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wiza ... (255 characters truncated) ... st of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/')
+2025-05-28 00:16:41,593 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-05-28 00:16:41,596 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:16:41,600 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:16:41,602 - sqlalchemy.engine.Engine - INFO - [generated in 0.00293s] (1,)
+2025-05-28 00:16:41,606 - book_catalog - INFO - Книга создана: <models.books.BookRepository object at 0x000001F252DCD940>
+2025-05-28 00:16:41,607 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:16:48,363 - book_catalog - INFO - Фильтрация title=None author=None genre=None limit=10 offset=0
+2025-05-28 00:16:48,364 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:16:48,365 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+ LIMIT $1::INTEGER
+2025-05-28 00:16:48,366 - sqlalchemy.engine.Engine - INFO - [generated in 0.00083s] (10,)
+2025-05-28 00:16:48,370 - book_catalog - INFO - Получаем отфильтрованный список книг[<models.books.BookRepository object at 0x000001F25326CF80>]
+2025-05-28 00:16:48,372 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:16:55,467 - book_catalog - INFO - Поиск книги по ID: 1
+2025-05-28 00:16:55,468 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:16:55,475 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:16:55,477 - sqlalchemy.engine.Engine - INFO - [generated in 0.00217s] (1,)
+2025-05-28 00:16:55,479 - book_catalog - INFO - Получаем книгу по ID: <models.books.BookRepository object at 0x000001F25326CCE0>
+2025-05-28 00:16:55,480 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:17:06,045 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-05-28 00:17:06,046 - sqlalchemy.engine.Engine - INFO - SELECT books.id, books.title, books.author, books.year, books.genre, books.pages, books.availability, books.cover_url, books.description 
+FROM books 
+WHERE books.id = $1::INTEGER
+2025-05-28 00:17:06,047 - sqlalchemy.engine.Engine - INFO - [cached since 10.57s ago] (15,)
+2025-05-28 00:17:06,049 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-05-28 00:17:11,856 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:12,930 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:23,959 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:23,976 - book_catalog - INFO - Создания книги: 'harry potter' | Хранилище: jsonbin
+2025-05-28 00:17:24,960 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:26,081 - httpx - INFO - HTTP Request: GET https://openlibrary.org/search.json?q=title%3Aharry+potter&limit=1 "HTTP/1.1 200 OK"
+2025-05-28 00:17:27,162 - httpx - INFO - HTTP Request: GET https://openlibrary.org/works/OL82563W.json "HTTP/1.1 200 OK"
+2025-05-28 00:17:28,169 - httpx - INFO - HTTP Request: GET https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:29,259 - httpx - INFO - HTTP Request: PUT https://api.jsonbin.io/v3/b/682bbc1f8561e97a5017996e "HTTP/1.1 200 OK"
+2025-05-28 00:17:29,262 - book_catalog - INFO - Книга создана: {'id': 15, 'title': 'harry potter', 'author': 'J. K. Rowling', 'year': 1997, 'genre': 'Ph', 'pages': 3000, 'availability': <AvailabilityStatus.AVAILABLE: 'available'>, 'cover_url': 'https://covers.openlibrary.org/b/id/10521270-L.jpg', 'description': 'Harry Potter #1\r\n\r\nWhen mysterious letters start arriving on his doorstep, Harry Potter has never heard of Hogwarts School of Witchcraft and Wizardry.\r\n\r\nThey are swiftly confiscated by his aunt and uncle.\r\n\r\nThen, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n\r\nAnd so the first of the Harry Potter adventures is set to begin.\r\n([source][1])\r\n\r\n\r\n  [1]: https://www.jkrowling.com/book/harry-potter-philosophers-stone/'}
